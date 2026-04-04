@@ -54,7 +54,7 @@ An open-source MATLAB toolkit providing **9 integrated modules** and a **unified
 ### Option 1: Clone from GitHub (recommended)
 
 ```bash
-git clone https://github.com/anoushn/MatSciTools.git
+git clone https://github.com/anoushnajarian/MatSciTools.git
 ```
 
 In MATLAB:
@@ -264,7 +264,7 @@ If you use MatSciTools in your research, please cite:
   title     = {MatSciTools: Material Science Engineering Toolkit for MATLAB},
   author    = {Najarian, Anoush and Shepherd, David},
   year      = {2026},
-  url       = {https://github.com/anoushn/MatSciTools},
+  url       = {https://github.com/anoushnajarian/MatSciTools},
   license   = {MIT}
 }
 ```

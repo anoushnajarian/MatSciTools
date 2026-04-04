@@ -4,7 +4,7 @@
 
 1. **Download or clone** the MatSciTools repository:
    ```
-   git clone https://github.com/anoushn/MatSciTools.git
+   git clone https://github.com/anoushnajarian/MatSciTools.git
    ```
 
 2. **Add to MATLAB path** — open MATLAB and run:

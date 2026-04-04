@@ -48,7 +48,7 @@ Statistics and Machine Learning Toolbox
 
 1. Go to https://www.mathworks.com/matlabcentral/fileexchange/
 2. Click **"Publish your first submission"** (or "Submit" if you've published before)
-3. Choose **"Link to GitHub repository"** and enter: `https://github.com/anoushn/MatSciTools`
+3. Choose **"Link to GitHub repository"** and enter: `https://github.com/anoushnajarian/MatSciTools`
 4. Fill in the title, summary, and description from above
 5. Add tags and select the category
 6. Upload a screenshot of the GUI (optional but recommended)
