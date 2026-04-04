@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+title: MatSciTools
+message: >-
+  If you use this software in your research, please cite it
+  using the metadata from this file.
+type: software
+authors:
+  - given-names: Anoush
+    family-names: Najarian
+    affiliation: MathWorks
+  - given-names: David
+    family-names: Shepherd
+    affiliation: Cornell University
+version: "1.0"
+date-released: "2026-04-03"
+license: MIT
+repository-code: https://github.com/anoushn/MatSciTools
+keywords:
+  - materials science
+  - MATLAB
+  - material selection
+  - Ashby charts
+  - mechanical testing
+  - microstructure analysis
+  - X-ray diffraction
+  - machine learning
+  - phase diagrams
+abstract: >-
+  MatSciTools is an open-source MATLAB toolkit for material
+  science and engineering, providing integrated modules for
+  material property lookup, Ashby-style selection, mechanical
+  testing analysis, phase diagram computation, microstructure
+  image analysis, X-ray diffraction processing, and
+  machine-learning-based property prediction.

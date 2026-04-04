@@ -1,0 +1,23 @@
+# MATLAB files
+*.m text eol=lf linguist-language=MATLAB
+*.mat binary
+*.fig binary
+*.mlx binary
+*.mlapp binary
+*.mltbx binary
+*.slx binary
+*.mdl text
+
+# Data files
+*.csv text eol=lf
+*.json text eol=lf
+
+# Documentation
+*.md text eol=lf
+
+# Images
+*.png binary
+*.jpg binary
+*.gif binary
+*.tif binary
+*.tiff binary

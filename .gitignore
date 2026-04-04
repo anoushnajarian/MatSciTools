@@ -1,0 +1,33 @@
+# MATLAB generated files
+*.asv
+*.m~
+*.mex*
+*.mlappinstall
+*.mltbx
+
+# Build outputs
+build/
+dist/
+
+# Simulink generated
+slprj/
+*.slxc
+
+# MATLAB autosave
+*.autosave
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.log
