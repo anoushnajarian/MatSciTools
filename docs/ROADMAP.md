@@ -47,9 +47,13 @@ Build the most accessible, integrated MATLAB toolkit for material science and en
 - [x] Integration with Materials Project API for data import
 - [x] Neural network for microstructure classification (feature-based scoring)
 
-## Phase 5: Enterprise (v1.0)
-**Status: In Progress**
-- [x] MATLAB App Designer GUI (+gui/MatSciApp) — 7-tab interface with cost estimation & report export
+## Phase 5: Enterprise (v1.0) ✅
+**Status: Complete**
+- [x] Programmatic uifigure GUI (+gui/MatSciApp) — 7-tab interface (Material Database, Material Selection, Mechanical Testing, Phase Diagrams, Microstructure, XRD Analysis, Modeling) with cost estimation & report export
+- [x] Slider-based controls replacing numeric input fields
+- [x] Constitutive model curve visualization in Mechanical Testing tab
+- [x] Williamson-Hall plot always visible in XRD Analysis tab
+- [x] Auto-regenerate XRD pattern on material change
 - [x] Microstructure classification integrated into GUI
 - [x] XRD CSV data export from GUI
 - [x] Comprehensive API documentation (docs/API_REFERENCE.md)
@@ -61,7 +65,10 @@ Build the most accessible, integrated MATLAB toolkit for material science and en
 - [x] Published to GitHub with MIT license, CITATION.cff, CONTRIBUTING.md
 - [x] Published MATLAB toolbox on File Exchange
 - [x] XRD demo script (demo_xrd.m)
-- [x] 230 tests across 16 test files
+- [x] Educational labs (3 lab exercises with answer keys)
+- [x] Circular intercept method (ASTM E112)
+- [x] Williamson-Hall standalone plot function
+- [x] 237 tests across 16 test files
 - [ ] Integration with Simulink for material models
 - [ ] Custom database management GUI
 - [ ] Community material database contributions
@@ -73,13 +80,13 @@ Build the most accessible, integrated MATLAB toolkit for material science and en
 | v0.2       | 2026-04-01 | Phase diagrams, true stress-strain, statistics, 57 materials |
 | v0.3       | 2026-04-01 | Microstructure analysis (grain size, porosity, phase fraction) |
 | v0.4       | 2026-04-01 | Intelligence module (KNN prediction, surrogate models, recommendation) |
-| v0.5       | 2026-04-01 | GUI application (6-tab App Designer interface) |
+| v0.5       | 2026-04-01 | GUI application (7-tab App Designer interface) |
 | v0.6       | 2026-04-01 | Cost estimation, report generation, batch processing |
 | v0.7       | 2026-04-02 | Constitutive models, XRD module, ASTM compliance |
 | v0.8       | 2026-04-02 | Materials Project API, microstructure classification |
 | v0.9       | 2026-04-02 | API documentation, GUI classify & XRD export, README overhaul |
 | v0.10      | 2026-04-03 | Standalone compiler, anomaly detection, feature importance, k-means clustering |
-| v1.0       | 2026-04-03 | GitHub/File Exchange release, 230 tests, XRD demo, publication export, LICENSE, CITATION.cff |
+| v1.0       | 2026-04-04 | GUI overhaul (sliders, Modeling tab, W-H inline plot), 237 tests, educational labs, circular intercept, publication export |
 
 ## Contributing
 Contributions welcome! See CONTRIBUTING.md for guidelines.

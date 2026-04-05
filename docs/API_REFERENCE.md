@@ -14,7 +14,7 @@
 | Phase Diagrams | `phasediag` | 4 | Binary phase diagrams and lever rule calculations |
 | Microstructure | `microstructure` | 8 | Grain size, porosity, phase fraction, batch processing |
 | XRD Analysis | `xrd` | 7 | Pattern generation, peak fitting, crystallite size |
-| Intelligence | `intelligence` | 4 | ML prediction, recommendation, classification |
+| Modeling | `intelligence` | 7 | ML prediction, recommendation, classification, anomaly detection, clustering |
 | Standards | `standards` | 2 | ASTM E8 and E112 compliance checking |
 | GUI | `gui` | 1 | 7-tab interactive application |
 
@@ -809,6 +809,56 @@ fprintf('Predicted: %s (%.1f%%)\n', result.prediction, result.confidence*100);
 
 ---
 
+### `intelligence.anomaly_detection`
+
+Mahalanobis-based anomaly detection across the material database.
+
+**Syntax:**
+```matlab
+result = intelligence.anomaly_detection()
+```
+
+**Returns:** `struct` with `threshold`, `n_anomalies`, `anomalies` (table), `rankings` (table), `materials` (list).
+
+---
+
+### `intelligence.feature_importance`
+
+Feature importance analysis for a target property.
+
+**Syntax:**
+```matlab
+result = intelligence.feature_importance(target_property)
+result = intelligence.feature_importance(target_property, 'Method', 'both')
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target_property` | `char` | — | Target property name |
+| `'Method'` | `char` | `'correlation'` | `'correlation'`, `'regression'`, or `'both'` |
+
+**Returns:** `struct` with `ranking` (table), `target`, `n_samples`, `method`.
+
+---
+
+### `intelligence.cluster_materials`
+
+K-means clustering of materials by properties.
+
+**Syntax:**
+```matlab
+result = intelligence.cluster_materials()
+result = intelligence.cluster_materials('K', 4)
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `'K'` | `double` | `3` | Number of clusters |
+
+**Returns:** `struct` with `n_clusters`, `silhouette`, `cluster_summary` (table), `assignments` (table).
+
+---
+
 ## Standards Compliance (`standards`)
 
 ### `standards.astm_e8`
@@ -850,12 +900,12 @@ app = gui.MatSciApp();
 
 **Tabs:**
 1. **Material Database** — Browse, search, and filter the 57-material database
-2. **Material Selection** — Ashby charts with interactive data tips, cost estimation
+2. **Material Selection** — Ashby charts with interactive data tips
 3. **Mechanical Testing** — Generate/analyze stress-strain data, constitutive model fitting, HTML report export
 4. **Phase Diagrams** — Binary phase diagrams (5 systems), lever rule calculations
-5. **Microstructure** — Synthetic image generation, grain size/porosity/phase analysis, ML classification, batch processing
-6. **XRD Analysis** — Pattern generation (8 materials), background subtraction, peak fitting (3 profiles), crystallite size, CSV export
-7. **Intelligence** — KNN property prediction, multi-objective recommendation, surrogate model building
+5. **Microstructure** — Synthetic image generation, grain size/porosity/phase analysis, ML classification
+6. **XRD Analysis** — Pattern generation (11 materials), background subtraction, peak fitting (3 profiles), crystallite size, Williamson-Hall plot always visible
+7. **Modeling** — KNN property prediction, multi-objective recommendation, surrogate model building, cost estimation, slider controls for density/yield/volume, dropdown material selectors
 
 ---
 

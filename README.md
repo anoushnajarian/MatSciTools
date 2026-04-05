@@ -126,14 +126,14 @@ app = gui.MatSciApp();
 | Module | Namespace | Functions | Description |
 |--------|-----------|-----------|-------------|
 | **Material Database** | `matdb` | `get`, `list`, `search`, `compare`, `units`, `materials_project` | 57 materials with property search, comparison, and Materials Project API |
-| **Material Selection** | `matsel` | `ashby`, `filter`, `index`, `rank`, `cost_estimate`, `convert_units`, `plot_styles` | Ashby charts, performance indices, multi-criteria ranking, cost estimation |
+| **Material Selection** | `matsel` | `ashby`, `filter`, `index`, `rank`, `cost_estimate`, `convert_units`, `plot_styles` | Ashby charts, performance indices, multi-criteria ranking |
 | **Mechanical Testing** | `mechtest` | `analyze`, `plot`, `report`, `generate_sample`, `import_data`, `compare`, `constitutive_models`, `true_stress_strain`, `statistics`, `stats_report`, `generate_report` | Stress-strain analysis, constitutive fitting, statistical comparison |
 | **Phase Diagrams** | `phasediag` | `plot`, `lever`, `binary`, `systems` | Binary phase diagrams (Cu-Ni, Pb-Sn, Al-Si, Al-Cu, Fe-Ni) and lever rule |
 | **Microstructure** | `microstructure` | `grainsize`, `circular_intercept`, `porosity`, `phase_fraction`, `generate_synthetic`, `batch_process`, `report`, `generate_report` | ASTM E112 grain size, porosity, phase fraction, batch processing |
 | **X-Ray Diffraction** | `xrd` | `generate_pattern`, `subtract_background`, `find_peaks`, `fit_peaks`, `crystallite_size`, `williamson_hall_plot`, `bragg` | 11 crystal structures, Gaussian/Lorentzian/pseudo-Voigt fitting, Scherrer equation |
-| **Intelligence** | `intelligence` | `predict_properties`, `surrogate_model`, `recommend`, `classify_microstructure`, `anomaly_detection`, `feature_importance`, `cluster_materials` | KNN prediction, polynomial surrogates, k-means clustering, Mahalanobis anomaly detection |
+| **Intelligence** | `intelligence` | `predict_properties`, `surrogate_model`, `recommend`, `classify_microstructure`, `anomaly_detection`, `feature_importance`, `cluster_materials` | ML prediction, clustering, anomaly detection, cost estimation |
 | **Standards** | `standards` | `astm_e8`, `astm_e112` | ASTM compliance validation |
-| **GUI** | `gui` | `MatSciApp` | Unified 7-tab graphical interface |
+| **GUI** | `gui` | `MatSciApp` | 7-tab programmatic uifigure interface |
 
 ---
 
@@ -147,12 +147,12 @@ app = gui.MatSciApp();
 
 The GUI provides a 7-tab interface covering:
 - **Database** — browse, search, and view material properties
-- **Selection** — interactive Ashby charts with cost estimation
+- **Selection** — interactive Ashby charts with export
 - **Mechtest** — generate/import data, analyze, fit constitutive models, export reports
 - **Phase Diagrams** — plot binary systems and compute lever rule
 - **Microstructure** — generate synthetic images, analyze grain size and porosity
 - **XRD** — generate patterns, find/fit peaks, export CSV
-- **Intelligence** — KNN prediction, recommendations, clustering, anomaly detection
+- **Modeling** — KNN prediction, recommendations, clustering, anomaly detection, cost estimation
 
 <!-- Screenshot placeholder: replace with actual screenshot -->
 <!-- ![MatSciTools GUI](docs/screenshots/gui_overview.png) -->
@@ -174,6 +174,8 @@ Ready-to-run demo scripts in the `examples/` folder:
 | `demo_xrd.m` | xrd | Pattern generation, background subtraction, peak fitting |
 | `demo_intelligence.m` | intelligence | KNN prediction, recommendations, surrogate models |
 | `lab_materials_101.m` | labs | Stress-strain curves, property extraction, constitutive models |
+| `lab_material_selection.m` | labs | Ashby charts, performance indices, cost estimation, design cases |
+| `lab_phase_diagrams.m` | labs | Binary systems, lever rule, eutectic reactions, solidification |
 | `lab_xrd_analysis.m` | labs | Bragg's law, peak fitting, Scherrer/Williamson-Hall |
 | `lab_microscopy.m` | labs | Grain size (linear & circular intercept), porosity, ASTM E112 |
 
@@ -194,6 +196,8 @@ Self-contained lab exercises for classroom use, with theory, working code, stude
 | Lab | File | Topics |
 |-----|------|--------|
 | **Materials 101** | `labs/lab_materials_101.m` | Stress-strain curves, property extraction, material comparison, true stress, constitutive models, ASTM E8 |
+| **Material Selection** | `labs/lab_material_selection.m` | Ashby charts, performance indices, multi-criteria ranking, cost estimation, design case studies |
+| **Phase Diagrams** | `labs/lab_phase_diagrams.m` | Binary systems, lever rule, eutectic reactions, solidification paths, Hume-Rothery rules |
 | **XRD Analysis** | `labs/lab_xrd_analysis.m` | Bragg's law, background subtraction, peak fitting, Scherrer/Williamson-Hall, crystal structure comparison |
 | **Microscopy** | `labs/lab_microscopy.m` | Grain size (linear & circular intercept), porosity, phase fraction, ASTM E112, batch processing |
 
@@ -307,7 +311,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 | Version | Highlights |
 |---------|------------|
-| **v1.0** | GitHub/File Exchange release, 237 tests, 9 modules, XRD demo, publication export, educational labs, Williamson-Hall plot, circular intercept |
+| **v1.0** | GitHub/File Exchange release, 237 tests, 9 modules, GUI overhaul, sliders, Modeling tab, Williamson-Hall inline, educational labs, circular intercept |
 | v0.10 | Standalone compiler, anomaly detection, feature importance, clustering |
 | v0.9 | API documentation, GUI classify & XRD export |
 | v0.8 | Materials Project API, microstructure classification |

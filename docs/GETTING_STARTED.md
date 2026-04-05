@@ -91,6 +91,73 @@ mechtest.plot(strain, stress, results, 'Title', 'Steel Tensile Test');
 [strain, stress] = mechtest.import_data('data/sample_tensile_test.csv');
 ```
 
+### Phase Diagrams (`phasediag`)
+
+Plot binary phase diagrams and compute lever rule calculations.
+
+```matlab
+% Plot a binary phase diagram
+phasediag.plot('Cu-Ni');
+
+% Lever rule: system, temperature (K), composition (mole fraction)
+r = phasediag.lever('Cu-Ni', 1500, 0.4);
+```
+
+### Microstructure (`microstructure`)
+
+Analyze microstructure images for grain size, porosity, and phase fraction.
+
+```matlab
+% Generate a synthetic grain microstructure
+[img, ~] = microstructure.generate_synthetic('Type', 'grains', 'NumGrains', 50);
+
+% Measure grain size (ASTM E112)
+gs = microstructure.grainsize(img, 'PixelSize', 0.5);
+```
+
+### X-Ray Diffraction (`xrd`)
+
+Generate and analyze XRD patterns, fit peaks, and estimate crystallite size.
+
+```matlab
+% Generate a synthetic diffraction pattern
+[tt, int, meta] = xrd.generate_pattern('Material', 'fcc_al');
+
+% Find peaks in the pattern
+peaks = xrd.find_peaks(tt, int);
+```
+
+### Intelligence (`intelligence`)
+
+ML-based property prediction, clustering, and anomaly detection.
+
+```matlab
+% Predict properties for a material using KNN
+pred = intelligence.predict_properties('Al 6061-T6');
+
+% Cluster materials into groups
+clusters = intelligence.cluster_materials('K', 5);
+```
+
+### GUI (`gui`)
+
+Launch the unified graphical interface spanning all modules.
+
+```matlab
+% Launch the 7-tab GUI application
+app = gui.MatSciApp();
+```
+
+---
+
+## Educational Labs
+
+Self-contained lab exercises are available in the `labs/` folder for classroom use. Each lab includes theory, working code, student TODO tasks, and instructor answer keys:
+
+- **Materials 101** (`labs/lab_materials_101.m`) — stress-strain curves, property extraction, constitutive models, ASTM E8
+- **XRD Analysis** (`labs/lab_xrd_analysis.m`) — Bragg's law, peak fitting, Scherrer/Williamson-Hall
+- **Microscopy** (`labs/lab_microscopy.m`) — grain size (linear & circular intercept), porosity, ASTM E112
+
 ---
 
 ## Running the Demos
@@ -106,6 +173,29 @@ run('examples/demo_material_selection.m');
 
 % Mechanical testing analysis
 run('examples/demo_mechanical_testing.m');
+
+% Advanced mechanical testing (true stress-strain, statistics)
+run('examples/demo_advanced_mechtest.m');
+
+% Phase diagrams and lever rule
+run('examples/demo_phase_diagram.m');
+
+% Microstructure analysis
+run('examples/demo_microstructure.m');
+
+% X-ray diffraction
+run('examples/demo_xrd.m');
+
+% Intelligence (ML prediction, clustering)
+run('examples/demo_intelligence.m');
+```
+
+Educational labs in the `labs/` folder:
+
+```matlab
+run('labs/lab_materials_101.m');
+run('labs/lab_xrd_analysis.m');
+run('labs/lab_microscopy.m');
 ```
 
 Each demo is a MATLAB live-script-compatible file with `%%` section breaks — you can step through sections one at a time with **Ctrl+Enter**.
@@ -114,11 +204,18 @@ Each demo is a MATLAB live-script-compatible file with `%%` section breaks — y
 
 ## Running Tests
 
-If unit tests are available in a `tests/` folder, run them with:
+The test suite contains **237 tests** across 16 test files:
 
 ```matlab
-results = runtests('tests');
-disp(results);
+setup();
+results = run_all_tests();
+```
+
+Or run individual test files:
+
+```matlab
+results = runtests('tests/test_matdb.m');
+results = runtests('tests/test_mechtest.m');
 ```
 
 ---
@@ -127,8 +224,9 @@ disp(results);
 
 | Resource | Location |
 |----------|----------|
-| Function help | `help matdb.get`, `help mechtest.analyze`, etc. |
+| Function help | `help matdb.get`, `help mechtest.analyze`, `help intelligence.predict_properties`, `help xrd.find_peaks`, etc. |
 | Demos | `examples/` folder |
+| Labs | `labs/` folder |
 | Specification | `docs/SPECIFICATION.md` |
 | Roadmap | `docs/ROADMAP.md` |
 | Literature Review | `docs/LITERATURE_REVIEW.md` |

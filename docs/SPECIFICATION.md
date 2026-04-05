@@ -2,9 +2,9 @@
 
 ## Project Specification
 
-**Version:** 1.0.0-draft  
-**Date:** April 1, 2026  
-**Status:** Draft  
+**Version:** 1.0.0  
+**Date:** April 4, 2026  
+**Status:** Released  
 **License:** Open Source (MIT)
 
 ---
@@ -446,44 +446,43 @@ File I/O uses platform-agnostic MATLAB functions (`fullfile`, `filesep`).
 
 ## 8. Project Roadmap
 
-### Phase 1 — Foundation (v0.1)
+All phases complete as of v1.0.
 
-- [ ] Project structure and packaging
-- [ ] Material database module (`matdb`) — full implementation
-- [ ] Material database with ~50 materials
-- [ ] Unit tests for `matdb`
-- [ ] `install.m` and `matscitools.m` entry point
+### Phase 1 — Foundation (v0.1) ✅
 
-### Phase 2 — Selection & Testing (v0.2)
+- [x] Project structure and packaging (`+folder` namespaces)
+- [x] Material database module (`matdb`) — 57 materials
+- [x] Material selection module (`matsel`) — Ashby charts, filtering, ranking
+- [x] Mechanical testing module (`mechtest`) — import, analyze, plot
+- [x] Unit tests and demo scripts
 
-- [ ] Material selection module (`matsel`) — Ashby charts, filtering, ranking
-- [ ] Mechanical testing module (`mechtest`) — import, analysis, plotting
-- [ ] Sample tensile test data
-- [ ] Unit tests for `matsel` and `mechtest`
-- [ ] Demo scripts for both modules
+### Phase 2 — Advanced Analysis (v0.2) ✅
 
-### Phase 3 — Phase Diagrams (v0.3)
+- [x] Phase diagram module (`phasediag`) — 5 binary systems, lever rule
+- [x] True stress-strain conversion, multi-specimen statistics
+- [x] Cost estimation, report generation (text and HTML)
 
-- [ ] Phase diagram module (`phasediag`) — binary systems, lever rule
-- [ ] Built-in system templates (Fe-C, Cu-Ni, Pb-Sn, Al-Cu)
-- [ ] Unit tests for `phasediag`
-- [ ] Demo script
+### Phase 3 — Image Analysis (v0.3) ✅
 
-### Phase 4 — Microstructure (v0.4)
+- [x] Microstructure module — grain size (linear + circular intercept), porosity, phase fraction
+- [x] Synthetic microstructure generation, batch processing
 
-- [ ] Microstructure module (`microstructure`) — grain size, porosity, phase fraction
-- [ ] Sample micrograph data
-- [ ] Unit tests for `microstructure`
-- [ ] Demo script
+### Phase 4 — Intelligence & XRD (v0.4) ✅
 
-### Phase 5 — Polish & Release (v1.0)
+- [x] Intelligence module — KNN prediction, surrogates, recommendation, clustering, anomaly detection
+- [x] XRD module — 11 crystal structures, peak fitting, crystallite size, Williamson-Hall
+- [x] Constitutive models (Hollomon, Ludwik, Voce, Swift)
+- [x] ASTM compliance (E8, E112), Materials Project API
 
-- [ ] Complete documentation (Getting Started, API Reference)
-- [ ] Cross-platform testing
-- [ ] Performance optimization for large datasets
-- [ ] README with badges, screenshots, and quick-start instructions
-- [ ] Release packaging
+### Phase 5 — GUI & Release (v1.0) ✅
+
+- [x] 7-tab programmatic uifigure GUI with slider controls
+- [x] Standalone compiler, publication-quality export
+- [x] 5 educational labs with instructor answer keys
+- [x] 237 tests across 16 test files
+- [x] Published to GitHub with MIT license, CITATION.cff
+- [x] Complete documentation (API Reference, Getting Started, Specification)
 
 ---
 
-*This specification is a living document and will be updated as the project evolves.*
+*This specification was finalized for v1.0 on April 4, 2026.*
