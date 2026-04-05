@@ -1,6 +1,6 @@
 # MatSciTools API Reference
 
-**Version 0.9** — Complete reference for all public functions.
+**Version 1.0** — Complete reference for all public functions.
 
 ---
 
@@ -12,8 +12,8 @@
 | Material Selection | `matsel` | 5 | Ashby charts, filtering, performance indices, cost estimation |
 | Mechanical Testing | `mechtest` | 11 | Stress-strain analysis, constitutive models, reports |
 | Phase Diagrams | `phasediag` | 4 | Binary phase diagrams and lever rule calculations |
-| Microstructure | `microstructure` | 7 | Grain size, porosity, phase fraction, batch processing |
-| XRD Analysis | `xrd` | 6 | Pattern generation, peak fitting, crystallite size |
+| Microstructure | `microstructure` | 8 | Grain size, porosity, phase fraction, batch processing |
+| XRD Analysis | `xrd` | 7 | Pattern generation, peak fitting, crystallite size |
 | Intelligence | `intelligence` | 4 | ML prediction, recommendation, classification |
 | Standards | `standards` | 2 | ASTM E8 and E112 compliance checking |
 | GUI | `gui` | 1 | 7-tab interactive application |
@@ -561,6 +561,22 @@ results = microstructure.batch_process(images, 'Analyses', {'grainsize','porosit
 
 ---
 
+### microstructure.circular_intercept(img, ...)
+
+Grain size measurement using the Abrams three-circle intercept method (ASTM E112).
+
+**Parameters:**
+- `img` — Grayscale image (matrix or filename)
+- `'NumCircles'` — Number of concentric circles (default: 3)
+- `'RadiusFraction'` — Max radius as fraction of image half-size (default: 0.4)
+- `'PixelSize'` — Physical size per pixel in micrometers (default: 1)
+- `'Threshold'` — Binarization threshold 0-1 (default: auto/Otsu)
+- `'ShowPlot'` — Display visualization (default: false)
+
+**Returns:** struct with `mean_intercept`, `std_intercept`, `grain_count`, `astm_grain_number`, `num_circles`, `circle_results`
+
+---
+
 ### `microstructure.report` / `microstructure.generate_report`
 
 Print or write microstructure analysis reports.
@@ -686,6 +702,23 @@ results = xrd.crystallite_size(fwhm_deg, two_theta, 'Method', 'williamson_hall')
 | `'K'` | `double` | `0.9` | Scherrer constant |
 
 **Returns:** `struct` with `crystallite_size_nm`; for Williamson-Hall: also `microstrain`, `R2`.
+
+---
+
+### xrd.williamson_hall_plot(fwhm_deg, two_theta, ...)
+
+Williamson-Hall analysis with publication-quality plot. Separates crystallite size from microstrain.
+
+**Parameters:**
+- `fwhm_deg` — Peak FWHMs in degrees (vector)
+- `two_theta` — Peak positions in degrees (vector)
+- `'Wavelength'` — X-ray wavelength in Angstroms (default: 1.5406)
+- `'K'` — Scherrer constant (default: 0.9)
+- `'InstrBroadening'` — Instrumental broadening in degrees (default: 0)
+- `'ShowPlot'` — Generate figure (default: true)
+- `'Title'` — Plot title (default: 'Williamson-Hall Plot')
+
+**Returns:** struct with `crystallite_size_nm`, `microstrain`, `R2`, `fit_coeffs`, `x`, `y`, `y_fit`
 
 ---
 
@@ -826,4 +859,4 @@ app = gui.MatSciApp();
 
 ---
 
-*Generated for MatSciTools v0.9 — April 2026*
+*Generated for MatSciTools v1.0 — April 2026*

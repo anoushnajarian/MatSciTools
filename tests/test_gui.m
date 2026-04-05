@@ -20,7 +20,7 @@ classdef test_gui < matlab.unittest.TestCase
         function testFigureExists(testCase)
             fig = testCase.App.UIFigure;
             testCase.verifyTrue(isvalid(fig));
-            testCase.verifyEqual(fig.Name, 'MatSciTools v0.10');
+            testCase.verifyEqual(fig.Name, 'MatSciTools v1.0');
         end
 
         function testHasSixTabs(testCase)
@@ -36,7 +36,7 @@ classdef test_gui < matlab.unittest.TestCase
             testCase.verifyTrue(any(strcmp(titles, 'Mechanical Testing')));
             testCase.verifyTrue(any(strcmp(titles, 'Phase Diagrams')));
             testCase.verifyTrue(any(strcmp(titles, 'Microstructure')));
-            testCase.verifyTrue(any(strcmp(titles, 'Intelligence')));
+            testCase.verifyTrue(any(strcmp(titles, 'Modeling')));
             testCase.verifyTrue(any(strcmp(titles, 'XRD Analysis')));
         end
 
@@ -77,7 +77,7 @@ classdef test_gui < matlab.unittest.TestCase
 
         function testMicrostructureGenerate(testCase)
             testCase.App.MicroTypeDrop.Value = 'grains';
-            testCase.App.MicroGrainsSpin.Value = 20;
+            testCase.App.MicroGrainsSlider.Value = 20;
             testCase.App.MicroGenButton.ButtonPushedFcn([], []);
             drawnow;
             testCase.verifyFalse(isempty(testCase.App.CurrentMicroImage));
@@ -95,7 +95,7 @@ classdef test_gui < matlab.unittest.TestCase
         end
 
         function testIntelligencePredict(testCase)
-            testCase.App.IntelMaterialField.Value = 'Ti-6Al-4V';
+            testCase.App.IntelMaterialDrop.Value = 'Ti-6Al-4V';
             testCase.App.IntelPredictButton.ButtonPushedFcn([], []);
             drawnow;
             txt = testCase.App.IntelResultsArea.Value;
@@ -103,8 +103,8 @@ classdef test_gui < matlab.unittest.TestCase
         end
 
         function testIntelligenceRecommend(testCase)
-            testCase.App.IntelRecDensMax.Value = 5000;
-            testCase.App.IntelRecYSMin.Value = 200;
+            testCase.App.IntelRecDensSlider.Value = 5000;
+            testCase.App.IntelRecYSSlider.Value = 200;
             testCase.App.IntelRecButton.ButtonPushedFcn([], []);
             drawnow;
             data = testCase.App.IntelRecTable.Data;
@@ -119,16 +119,16 @@ classdef test_gui < matlab.unittest.TestCase
         end
 
         function testCostEstimation(testCase)
-            testCase.App.SelCostMaterialField.Value = 'AISI 1045';
-            testCase.App.SelCostVolumeField.Value = 0.001;
-            testCase.App.SelCostButton.ButtonPushedFcn([], []);
+            testCase.App.IntelCostMaterialDrop.Value = 'AISI 1045 Steel';
+            testCase.App.IntelCostVolSlider.Value = 0.001;
+            testCase.App.IntelCostButton.ButtonPushedFcn([], []);
             drawnow;
-            testCase.verifyTrue(contains(testCase.App.SelCostLabel.Text, 'Mass:'));
+            testCase.verifyTrue(contains(testCase.App.IntelCostLabel.Text, 'Mass:'));
         end
 
-        function testMicroBatchButtonExists(testCase)
-            testCase.verifyTrue(isvalid(testCase.App.MicroBatchButton));
-            testCase.verifyEqual(testCase.App.MicroBatchButton.Text, 'Batch Folder...');
+        function testMicroClassifyButtonExists(testCase)
+            testCase.verifyTrue(isvalid(testCase.App.MicroClassifyButton));
+            testCase.verifyEqual(testCase.App.MicroClassifyButton.Text, 'Classify');
         end
 
         function testXrdGenerate(testCase)
@@ -164,13 +164,13 @@ classdef test_gui < matlab.unittest.TestCase
         end
 
         function testXrdSensitivity(testCase)
-            testCase.verifyTrue(isvalid(testCase.App.XrdSensitivitySpin));
-            testCase.verifyEqual(testCase.App.XrdSensitivitySpin.Value, 10);
+            testCase.verifyTrue(isvalid(testCase.App.XrdSensitivitySlider));
+            testCase.verifyEqual(testCase.App.XrdSensitivitySlider.Value, 10);
         end
 
         function testMicroClassifyButton(testCase)
             testCase.App.MicroTypeDrop.Value = 'grains';
-            testCase.App.MicroGrainsSpin.Value = 20;
+            testCase.App.MicroGrainsSlider.Value = 20;
             testCase.App.MicroGenButton.ButtonPushedFcn([], []);
             drawnow;
             testCase.verifyTrue(testCase.App.MicroClassifyButton.Enable);
@@ -209,7 +209,7 @@ classdef test_gui < matlab.unittest.TestCase
             tabs = testCase.App.TabGroup.Children;
             titles = arrayfun(@(t) t.Title, tabs, 'UniformOutput', false);
             xrdIdx = find(strcmp(titles, 'XRD Analysis'));
-            intelIdx = find(strcmp(titles, 'Intelligence'));
+            intelIdx = find(strcmp(titles, 'Modeling'));
             testCase.verifyLessThan(xrdIdx, intelIdx);
         end
     end

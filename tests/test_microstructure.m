@@ -126,5 +126,41 @@ classdef test_microstructure < matlab.unittest.TestCase
             microstructure.report(results, 'porosity');
             testCase.verifyTrue(true);
         end
+
+        function testCircularInterceptReturnsStruct(testCase)
+            [img, ~] = microstructure.generate_synthetic('Type', 'grains', 'NumGrains', 30);
+            results = microstructure.circular_intercept(img, 'PixelSize', 0.5);
+            testCase.verifyClass(results, 'struct');
+            testCase.verifyTrue(isfield(results, 'mean_intercept'));
+            testCase.verifyTrue(isfield(results, 'astm_grain_number'));
+            testCase.verifyTrue(isfield(results, 'circle_results'));
+        end
+
+        function testCircularInterceptPositiveValues(testCase)
+            [img, ~] = microstructure.generate_synthetic('Type', 'grains', 'NumGrains', 30);
+            results = microstructure.circular_intercept(img, 'PixelSize', 0.5);
+            if results.grain_count > 0
+                testCase.verifyGreaterThan(results.mean_intercept, 0);
+                testCase.verifyTrue(isfinite(results.astm_grain_number));
+            end
+        end
+
+        function testCircularInterceptNumCircles(testCase)
+            [img, ~] = microstructure.generate_synthetic('Type', 'grains', 'NumGrains', 30);
+            r3 = microstructure.circular_intercept(img, 'NumCircles', 3);
+            r5 = microstructure.circular_intercept(img, 'NumCircles', 5);
+            testCase.verifyEqual(r3.num_circles, 3);
+            testCase.verifyEqual(r5.num_circles, 5);
+            testCase.verifyEqual(numel(r5.circle_results), 5);
+        end
+
+        function testCircularInterceptPixelSize(testCase)
+            [img, ~] = microstructure.generate_synthetic('Type', 'grains', 'NumGrains', 30);
+            r1 = microstructure.circular_intercept(img, 'PixelSize', 1);
+            r2 = microstructure.circular_intercept(img, 'PixelSize', 2);
+            if r1.grain_count > 0 && r2.grain_count > 0
+                testCase.verifyGreaterThan(r2.mean_intercept, r1.mean_intercept * 1.5);
+            end
+        end
     end
 end

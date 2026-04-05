@@ -195,5 +195,32 @@ classdef test_xrd < matlab.unittest.TestCase
             testCase.verifyEqual(peaks.count, 4);
         end
 
+        function testWilliamsonHallPlotReturnsStruct(testCase)
+            result = xrd.williamson_hall_plot([0.3; 0.35; 0.4], ...
+                [38.5; 44.7; 65.1], 'ShowPlot', false);
+            testCase.verifyTrue(isfield(result, 'crystallite_size_nm'));
+            testCase.verifyTrue(isfield(result, 'microstrain'));
+            testCase.verifyTrue(isfield(result, 'R2'));
+            testCase.verifyTrue(isfield(result, 'x'));
+            testCase.verifyTrue(isfield(result, 'y'));
+            testCase.verifyTrue(isfield(result, 'y_fit'));
+            testCase.verifyGreaterThan(result.crystallite_size_nm, 0);
+        end
+
+        function testWilliamsonHallPlotWithInstrBroadening(testCase)
+            result = xrd.williamson_hall_plot([0.5; 0.55; 0.6; 0.7], ...
+                [38.5; 44.7; 65.1; 78.2], ...
+                'InstrBroadening', 0.1, 'ShowPlot', false);
+            testCase.verifyGreaterThan(result.crystallite_size_nm, 0);
+            testCase.verifyTrue(isfinite(result.microstrain));
+        end
+
+        function testCrystalliteSizeInstrBroadening(testCase)
+            res_no = xrd.crystallite_size(0.5, 44.7);
+            res_yes = xrd.crystallite_size(0.5, 44.7, 'InstrBroadening', 0.1);
+            testCase.verifyGreaterThan(res_yes.crystallite_size_nm(1), ...
+                res_no.crystallite_size_nm(1));
+        end
+
     end
 end

@@ -38,11 +38,12 @@ classdef MatSciApp < handle
         % Export button (Selection tab)
         SelExportButton         matlab.ui.control.Button
 
-        % Cost estimation (Selection tab)
-        SelCostMaterialField    matlab.ui.control.EditField
-        SelCostVolumeField      matlab.ui.control.NumericEditField
-        SelCostButton           matlab.ui.control.Button
-        SelCostLabel            matlab.ui.control.Label
+        % Cost estimation (Modeling tab)
+        IntelCostMaterialDrop   matlab.ui.control.DropDown
+        IntelCostVolSlider      matlab.ui.control.Slider
+        IntelCostVolLabel       matlab.ui.control.Label
+        IntelCostButton         matlab.ui.control.Button
+        IntelCostLabel          matlab.ui.control.Label
 
         % Export buttons
         MechExportButton        matlab.ui.control.Button
@@ -53,18 +54,22 @@ classdef MatSciApp < handle
         PhaseSystemDrop     matlab.ui.control.DropDown
         PhasePlotButton     matlab.ui.control.Button
         PhaseAxes           matlab.ui.control.UIAxes
-        PhaseTempField      matlab.ui.control.NumericEditField
-        PhaseCompField      matlab.ui.control.NumericEditField
+        PhaseTempSlider     matlab.ui.control.Slider
+        PhaseTempLabel      matlab.ui.control.Label
+        PhaseCompSlider     matlab.ui.control.Slider
+        PhaseCompLabel      matlab.ui.control.Label
         PhaseLeverButton    matlab.ui.control.Button
         PhaseLeverArea      matlab.ui.control.TextArea
 
-        % Intelligence tab
+        % Modeling tab
         IntelTab            matlab.ui.container.Tab
-        IntelMaterialField  matlab.ui.control.EditField
+        IntelMaterialDrop   matlab.ui.control.DropDown
         IntelPredictButton  matlab.ui.control.Button
         IntelResultsArea    matlab.ui.control.TextArea
-        IntelRecDensMax     matlab.ui.control.NumericEditField
-        IntelRecYSMin       matlab.ui.control.NumericEditField
+        IntelRecDensSlider  matlab.ui.control.Slider
+        IntelRecDensLabel   matlab.ui.control.Label
+        IntelRecYSSlider    matlab.ui.control.Slider
+        IntelRecYSLabel     matlab.ui.control.Label
         IntelRecButton      matlab.ui.control.Button
         IntelRecTable       matlab.ui.control.Table
         IntelSurrogateBtn   matlab.ui.control.Button
@@ -75,12 +80,12 @@ classdef MatSciApp < handle
         % Microstructure tab
         MicroTab            matlab.ui.container.Tab
         MicroTypeDrop       matlab.ui.control.DropDown
-        MicroGrainsSpin     matlab.ui.control.NumericEditField
+        MicroGrainsSlider   matlab.ui.control.Slider
+        MicroGrainsLabel    matlab.ui.control.Label
         MicroGenButton      matlab.ui.control.Button
         MicroAxesImg        matlab.ui.control.UIAxes
         MicroAnalyzeButton  matlab.ui.control.Button
         MicroResultsArea    matlab.ui.control.TextArea
-        MicroBatchButton    matlab.ui.control.Button
         MicroClassifyButton matlab.ui.control.Button
 
         % XRD tab
@@ -91,10 +96,14 @@ classdef MatSciApp < handle
         XrdAxes             matlab.ui.control.UIAxes
         XrdResultsArea      matlab.ui.control.TextArea
         XrdProfileDrop      matlab.ui.control.DropDown
-        XrdSensitivitySpin  matlab.ui.control.NumericEditField
+        XrdSensitivitySlider matlab.ui.control.Slider
+        XrdSensitivityLabel matlab.ui.control.Label
         XrdExportButton     matlab.ui.control.Button
+        XrdWHAxes           matlab.ui.control.UIAxes
         CurrentTwoTheta     double
         CurrentIntensity    double
+        CurrentXrdFWHMs     double
+        CurrentXrdCenters   double
 
         % Internal data
         CurrentStrain       double
@@ -116,7 +125,7 @@ classdef MatSciApp < handle
     methods (Access = private)
         function createComponents(app)
             % Main figure
-            app.UIFigure = uifigure('Name', 'MatSciTools v0.10', ...
+            app.UIFigure = uifigure('Name', 'MatSciTools v1.0', ...
                 'Position', [100 100 1000 700], 'Resize', 'on');
 
             % Tab group
@@ -243,28 +252,7 @@ classdef MatSciApp < handle
                 'ButtonPushedFcn', @(~,~) exportPlot(app));
 
             app.SelAxes = uiaxes(app.SelTab, ...
-                'Position', [50 70 880 540]);
-
-            % Cost estimation section
-            uilabel(app.SelTab, 'Text', 'COST ESTIMATION', ...
-                'Position', [20 30 150 22], 'FontWeight', 'bold');
-
-            uilabel(app.SelTab, 'Text', 'Material:', ...
-                'Position', [170 30 55 22]);
-            app.SelCostMaterialField = uieditfield(app.SelTab, ...
-                'Position', [230 30 150 22], 'Value', 'AISI 1045');
-
-            uilabel(app.SelTab, 'Text', 'Vol (m³):', ...
-                'Position', [395 30 55 22]);
-            app.SelCostVolumeField = uieditfield(app.SelTab, 'numeric', ...
-                'Position', [455 30 70 22], 'Value', 0.001);
-
-            app.SelCostButton = uibutton(app.SelTab, ...
-                'Text', 'Estimate Cost', 'Position', [540 30 100 22], ...
-                'ButtonPushedFcn', @(~,~) estimateCost(app));
-
-            app.SelCostLabel = uilabel(app.SelTab, ...
-                'Text', '', 'Position', [650 30 300 22]);
+                'Position', [50 30 880 580]);
         end
 
         function plotAshby(app)
@@ -363,13 +351,13 @@ classdef MatSciApp < handle
         function estimateCost(app)
             try
                 r = matsel.cost_estimate('component', ...
-                    'Material', app.SelCostMaterialField.Value, ...
-                    'Volume', app.SelCostVolumeField.Value, ...
+                    'Material', app.IntelCostMaterialDrop.Value, ...
+                    'Volume', app.IntelCostVolSlider.Value, ...
                     'ManufacturingFactor', 2.0);
-                app.SelCostLabel.Text = sprintf('Mass: %.2f kg | Raw: $%.2f | Total: $%.2f (2x mfg)', ...
+                app.IntelCostLabel.Text = sprintf('Mass: %.2f kg | Raw: $%.2f | Total: $%.2f (2x mfg)', ...
                     r.mass_kg, r.raw_cost, r.total_cost);
             catch ex
-                app.SelCostLabel.Text = sprintf('Error: %s', ex.message);
+                app.IntelCostLabel.Text = sprintf('Error: %s', ex.message);
             end
         end
 
@@ -406,7 +394,7 @@ classdef MatSciApp < handle
                 'Position', [50 180 600 420]);
 
             app.MechResultsArea = uitextarea(app.MechTab, ...
-                'Position', [670 30 290 610], 'Editable', 'off', ...
+                'Position', [670 30 290 570], 'Editable', 'off', ...
                 'FontName', 'Courier New');
 
             app.MechExportButton = uibutton(app.MechTab, ...
@@ -477,26 +465,40 @@ classdef MatSciApp < handle
             filename = fullfile(tempdir, sprintf('mechtest_report_%s.html', safeName));
             mechtest.generate_report(results, filename, ...
                 'Format', 'html', 'SampleName', mat_type);
-            web(filename);
+            web(filename, '-browser');
+            uialert(app.UIFigure, sprintf('Report exported to:\n%s', filename), ...
+                'Export Complete', 'Icon', 'success');
         end
 
         function fitConstitutiveModels(app)
             if isempty(app.CurrentStrain), return; end
             cm = mechtest.constitutive_models(app.CurrentStrain, app.CurrentStress);
 
-            txt = sprintf('CONSTITUTIVE MODEL FITS\n========================\n\n');
+            % --- Plot engineering + true curves with model fits ---
+            cla(app.MechAxes);
+            hold(app.MechAxes, 'on');
+            plot(app.MechAxes, app.CurrentStrain*100, app.CurrentStress, ...
+                '-', 'Color', [0.7 0.7 0.7], 'LineWidth', 1.5, ...
+                'DisplayName', 'Engineering');
+            plot(app.MechAxes, cm.true_strain*100, cm.true_stress, ...
+                'k-', 'LineWidth', 1.5, 'DisplayName', 'True');
 
             models = {'hollomon', 'ludwik', 'voce', 'swift'};
-            labels = {'Hollomon: sigma = K*eps^n', ...
-                      'Ludwik: sigma = s0 + K*eps^n', ...
-                      'Voce: sigma = ss - (ss-s0)*exp(-th*eps)', ...
-                      'Swift: sigma = K*(e0+eps)^n'};
+            labels = {'Hollomon', 'Ludwik', 'Voce', 'Swift'};
+            colors = {[0.00 0.45 0.74], [0.85 0.33 0.10], ...
+                      [0.47 0.67 0.19], [0.64 0.08 0.18]};
+            eqns  = {'sigma = K*eps^n', ...
+                      'sigma = s0 + K*eps^n', ...
+                      'sigma = ss - (ss-s0)*exp(-th*eps)', ...
+                      'sigma = K*(e0+eps)^n'};
+
+            txt = sprintf('CONSTITUTIVE MODEL FITS\n========================\n\n');
 
             for i = 1:4
                 m = models{i};
                 if ~isfield(cm, m), continue; end
                 f = cm.(m);
-                txt = [txt, sprintf('%s\n', labels{i})];
+                txt = [txt, sprintf('%s: %s\n', labels{i}, eqns{i})];
                 if isnan(f.R2)
                     txt = [txt, sprintf('  (fit failed)\n\n')];
                     continue;
@@ -512,7 +514,20 @@ classdef MatSciApp < handle
                         txt = [txt, sprintf('  K = %.1f MPa,  e0 = %.5f,  n = %.4f\n', f.K, f.eps0, f.n)];
                 end
                 txt = [txt, sprintf('  R^2 = %.4f\n\n', f.R2)];
+
+                plasticStrain = cm.true_strain(cm.plastic_idx);
+                plasticPred = f.predicted(cm.plastic_idx);
+                plot(app.MechAxes, plasticStrain*100, plasticPred, ...
+                    '--', 'Color', colors{i}, 'LineWidth', 2, ...
+                    'DisplayName', sprintf('%s (R^2=%.4f)', labels{i}, f.R2));
             end
+
+            hold(app.MechAxes, 'off');
+            xlabel(app.MechAxes, 'True Strain (%)');
+            ylabel(app.MechAxes, 'True Stress (MPa)');
+            title(app.MechAxes, 'Constitutive Model Fits');
+            legend(app.MechAxes, 'Location', 'best');
+            grid(app.MechAxes, 'on');
 
             txt = [txt, sprintf('Best fit: %s\n', cm.best_model)];
             app.MechResultsArea.Value = txt;
@@ -534,24 +549,37 @@ classdef MatSciApp < handle
 
             uilabel(app.PhaseTab, 'Text', 'T (°C):', ...
                 'Position', [320 620 42 22]);
-            app.PhaseTempField = uieditfield(app.PhaseTab, 'numeric', ...
-                'Position', [365 620 70 22], 'Value', 1250);
+            app.PhaseTempSlider = uislider(app.PhaseTab, ...
+                'Position', [370 630 140 3], ...
+                'Limits', [200 2000], 'Value', 1250, ...
+                'MajorTicks', [200 600 1000 1400 1800], ...
+                'MinorTicks', [], ...
+                'ValueChangedFcn', @(~,~) updatePhaseTempLabel(app));
+            app.PhaseTempLabel = uilabel(app.PhaseTab, ...
+                'Text', '1250', 'Position', [515 616 40 22], ...
+                'HorizontalAlignment', 'center');
 
             uilabel(app.PhaseTab, 'Text', 'mol% B:', ...
-                'Position', [450 620 45 22]);
-            app.PhaseCompField = uieditfield(app.PhaseTab, 'numeric', ...
-                'Position', [500 620 50 22], 'Value', 50, ...
-                'Limits', [0 100]);
+                'Position', [565 620 45 22]);
+            app.PhaseCompSlider = uislider(app.PhaseTab, ...
+                'Position', [618 630 140 3], ...
+                'Limits', [0 100], 'Value', 50, ...
+                'MajorTicks', [0 25 50 75 100], ...
+                'MinorTicks', [], ...
+                'ValueChangedFcn', @(~,~) updatePhaseCompLabel(app));
+            app.PhaseCompLabel = uilabel(app.PhaseTab, ...
+                'Text', '50', 'Position', [763 616 30 22], ...
+                'HorizontalAlignment', 'center');
 
             app.PhaseLeverButton = uibutton(app.PhaseTab, ...
-                'Text', 'Lever Rule', 'Position', [560 620 80 22], ...
+                'Text', 'Lever Rule', 'Position', [800 620 80 22], ...
                 'ButtonPushedFcn', @(~,~) calcLever(app));
 
             app.PhaseAxes = uiaxes(app.PhaseTab, ...
                 'Position', [50 80 600 520]);
 
             app.PhaseLeverArea = uitextarea(app.PhaseTab, ...
-                'Position', [670 80 290 560], 'Editable', 'off', ...
+                'Position', [670 80 290 510], 'Editable', 'off', ...
                 'FontName', 'Courier New');
         end
 
@@ -589,9 +617,9 @@ classdef MatSciApp < handle
 
         function calcLever(app)
             sys = app.PhaseSystemDrop.Value;
-            T_C = app.PhaseTempField.Value;
+            T_C = round(app.PhaseTempSlider.Value);
             T_K = T_C + 273.15;  % convert °C to K for backend
-            x0_pct = app.PhaseCompField.Value;
+            x0_pct = round(app.PhaseCompSlider.Value, 1);
             x0 = x0_pct / 100;  % convert mol% to fraction
 
             r = phasediag.lever(sys, T_K, x0);
@@ -632,24 +660,27 @@ classdef MatSciApp < handle
 
             uilabel(app.MicroTab, 'Text', 'Grains/Features:', ...
                 'Position', [185 620 100 22]);
-            app.MicroGrainsSpin = uieditfield(app.MicroTab, 'numeric', ...
-                'Position', [290 620 50 22], 'Value', 40);
+            app.MicroGrainsSlider = uislider(app.MicroTab, ...
+                'Position', [290 630 120 3], ...
+                'Limits', [5 200], 'Value', 40, ...
+                'MajorTicks', [5 50 100 150 200], ...
+                'MinorTicks', [], ...
+                'ValueChangedFcn', @(~,~) updateMicroGrainsLabel(app));
+            app.MicroGrainsLabel = uilabel(app.MicroTab, ...
+                'Text', '40', 'Position', [415 616 30 22], ...
+                'HorizontalAlignment', 'center');
 
             app.MicroGenButton = uibutton(app.MicroTab, ...
-                'Text', 'Generate', 'Position', [355 620 80 22], ...
+                'Text', 'Generate', 'Position', [460 620 80 22], ...
                 'ButtonPushedFcn', @(~,~) generateMicro(app));
 
             app.MicroAnalyzeButton = uibutton(app.MicroTab, ...
-                'Text', 'Analyze', 'Position', [445 620 70 22], ...
+                'Text', 'Analyze', 'Position', [550 620 70 22], ...
                 'ButtonPushedFcn', @(~,~) analyzeMicro(app), ...
                 'Enable', 'off');
 
-            app.MicroBatchButton = uibutton(app.MicroTab, ...
-                'Text', 'Batch Folder...', 'Position', [530 620 100 22], ...
-                'ButtonPushedFcn', @(~,~) batchMicro(app));
-
             app.MicroClassifyButton = uibutton(app.MicroTab, ...
-                'Text', 'Classify', 'Position', [645 620 80 22], ...
+                'Text', 'Classify', 'Position', [630 620 80 22], ...
                 'ButtonPushedFcn', @(~,~) classifyMicro(app), ...
                 'Enable', 'off');
 
@@ -657,13 +688,13 @@ classdef MatSciApp < handle
                 'Position', [20 100 480 500]);
 
             app.MicroResultsArea = uitextarea(app.MicroTab, ...
-                'Position', [520 100 440 520], 'Editable', 'off', ...
+                'Position', [520 100 440 500], 'Editable', 'off', ...
                 'FontName', 'Courier New');
         end
 
         function generateMicro(app)
             mtype = app.MicroTypeDrop.Value;
-            n_grains = app.MicroGrainsSpin.Value;
+            n_grains = round(app.MicroGrainsSlider.Value);
 
             if strcmpi(mtype, 'porous')
                 [img, meta] = microstructure.generate_synthetic( ...
@@ -691,7 +722,7 @@ classdef MatSciApp < handle
 
             txt = sprintf('MICROSTRUCTURE ANALYSIS\n========================\n\n');
 
-            % Grain size analysis (always)
+            % Grain size — linear intercept
             gs = microstructure.grainsize(img, 'PixelSize', 1);
             txt = [txt, sprintf(['Grain Size (Linear Intercept):\n' ...
                 '  Mean Intercept:    %.1f um\n' ...
@@ -699,6 +730,14 @@ classdef MatSciApp < handle
                 '  Grain Count:       %d\n' ...
                 '  ASTM Grain #:      %.1f\n\n'], ...
                 gs.mean_intercept, gs.std_intercept, gs.grain_count, gs.astm_grain_number)];
+
+            % Grain size — circular intercept
+            circ = microstructure.circular_intercept(img, 'PixelSize', 1, 'NumCircles', 3);
+            txt = [txt, sprintf(['Grain Size (Circular Intercept):\n' ...
+                '  Mean Intercept:    %.1f um\n' ...
+                '  Intersections:     %d\n' ...
+                '  ASTM Grain #:      %.1f\n\n'], ...
+                circ.mean_intercept, circ.grain_count, circ.astm_grain_number)];
 
             % Porosity (especially for porous)
             por = microstructure.porosity(img);
@@ -717,90 +756,6 @@ classdef MatSciApp < handle
             end
 
             app.MicroResultsArea.Value = txt;
-        end
-
-        function batchMicro(app)
-            folder = uigetdir('', 'Select folder of micrograph images');
-            if isequal(folder, 0), return; end
-
-            % Find image files
-            exts = {'*.png','*.jpg','*.jpeg','*.tif','*.tiff','*.bmp'};
-            files = {};
-            for e = 1:numel(exts)
-                d = dir(fullfile(folder, exts{e}));
-                for f = 1:numel(d)
-                    files{end+1} = fullfile(folder, d(f).name); %#ok<AGROW>
-                end
-            end
-
-            if isempty(files)
-                app.MicroResultsArea.Value = 'No image files found in selected folder.';
-                return;
-            end
-
-            n_batch = numel(files);
-            app.MicroResultsArea.Value = sprintf('Analyzing %d images from:\n%s', n_batch, folder);
-            drawnow;
-
-            results = microstructure.batch_process(files, ...
-                'Analyses', {'grainsize', 'porosity'}, 'ShowProgress', false);
-            s = results.summary;
-
-            txt = sprintf('BATCH ANALYSIS (%d images)\n', n_batch);
-            txt = [txt, sprintf('================================\n')];
-            txt = [txt, sprintf('Folder: %s\n\n', folder)];
-
-            if isfield(s, 'mean_grain_size')
-                txt = [txt, sprintf(['Grain Size (averaged across %d fields of view):\n' ...
-                    '  Mean Grain Size:   %.1f um\n' ...
-                    '  Std Dev:           %.1f um\n' ...
-                    '  Mean ASTM #:       %.1f\n\n'], ...
-                    n_batch, s.mean_grain_size, s.std_grain_size, s.mean_astm_number)];
-            end
-
-            if isfield(s, 'mean_porosity')
-                txt = [txt, sprintf(['Porosity (averaged across %d fields of view):\n' ...
-                    '  Mean Porosity:     %.2f %%\n' ...
-                    '  Std Dev:           %.2f %%\n\n'], ...
-                    n_batch, s.mean_porosity, s.std_porosity)];
-            end
-
-            txt = [txt, sprintf('--- Per-Image Details ---\n')];
-            for i = 1:n_batch
-                [~, fname, fext] = fileparts(files{i});
-                r = results.individual{i};
-                if isfield(r, 'error')
-                    txt = [txt, sprintf('%s%s: ERROR - %s\n', fname, fext, r.error)]; %#ok<AGROW>
-                else
-                    line = sprintf('%s%s:', fname, fext);
-                    if isfield(r, 'grainsize')
-                        line = [line, sprintf(' grain=%.1f um', r.grainsize.mean_intercept)];
-                    end
-                    if isfield(r, 'porosity')
-                        line = [line, sprintf(' pore=%.2f%%', r.porosity.porosity_percent)];
-                    end
-                    txt = [txt, line, sprintf('\n')]; %#ok<AGROW>
-                end
-            end
-
-            app.MicroResultsArea.Value = txt;
-
-            % Show first successfully loaded image
-            for i = 1:n_batch
-                if ~isfield(results.individual{i}, 'error')
-                    img = imread(files{i});
-                    if size(img, 3) == 3
-                        img = rgb2gray(img);
-                    end
-                    app.CurrentMicroImage = img;
-                    imagesc(app.MicroAxesImg, img);
-                    colormap(app.MicroAxesImg, gray);
-                    axis(app.MicroAxesImg, 'image');
-                    [~, fn, fe] = fileparts(files{i});
-                    title(app.MicroAxesImg, sprintf('%s%s (1 of %d)', fn, fe, n_batch));
-                    break;
-                end
-            end
         end
 
         function classifyMicro(app)
@@ -829,9 +784,17 @@ classdef MatSciApp < handle
             app.MicroResultsArea.Value = txt;
         end
 
-        %% ---- INTELLIGENCE TAB ----
+        %% ---- MODELING TAB ----
         function createIntelligenceTab(app)
-            app.IntelTab = uitab(app.TabGroup, 'Title', 'Intelligence');
+            app.IntelTab = uitab(app.TabGroup, 'Title', 'Modeling');
+
+            % Build material name list from database
+            try
+                T = matdb.list();
+                matNames = T.Name';
+            catch
+                matNames = {'Al 6061-T6'};
+            end
 
             % --- Property Prediction section ---
             uilabel(app.IntelTab, 'Text', 'PROPERTY PREDICTION', ...
@@ -839,8 +802,9 @@ classdef MatSciApp < handle
 
             uilabel(app.IntelTab, 'Text', 'Material:', ...
                 'Position', [20 592 55 22]);
-            app.IntelMaterialField = uieditfield(app.IntelTab, ...
-                'Position', [80 592 160 22], 'Value', 'Al 6061-T6');
+            app.IntelMaterialDrop = uidropdown(app.IntelTab, ...
+                'Items', matNames, 'Value', 'Al 6061-T6', ...
+                'Position', [80 592 160 22]);
 
             app.IntelPredictButton = uibutton(app.IntelTab, ...
                 'Text', 'Predict', 'Position', [250 592 70 22], ...
@@ -856,16 +820,30 @@ classdef MatSciApp < handle
 
             uilabel(app.IntelTab, 'Text', 'Max Density (kg/m³):', ...
                 'Position', [20 352 130 22]);
-            app.IntelRecDensMax = uieditfield(app.IntelTab, 'numeric', ...
-                'Position', [155 352 70 22], 'Value', 5000);
+            app.IntelRecDensSlider = uislider(app.IntelTab, ...
+                'Position', [155 362 140 3], ...
+                'Limits', [500 10000], 'Value', 5000, ...
+                'MajorTicks', [500 2500 5000 7500 10000], ...
+                'MinorTicks', [], ...
+                'ValueChangedFcn', @(~,~) updateIntelDensLabel(app));
+            app.IntelRecDensLabel = uilabel(app.IntelTab, ...
+                'Text', '5000', 'Position', [300 348 45 22], ...
+                'HorizontalAlignment', 'center');
 
             uilabel(app.IntelTab, 'Text', 'Min Yield (MPa):', ...
-                'Position', [20 324 110 22]);
-            app.IntelRecYSMin = uieditfield(app.IntelTab, 'numeric', ...
-                'Position', [155 324 70 22], 'Value', 200);
+                'Position', [20 318 110 22]);
+            app.IntelRecYSSlider = uislider(app.IntelTab, ...
+                'Position', [155 328 140 3], ...
+                'Limits', [0 2000], 'Value', 200, ...
+                'MajorTicks', [0 500 1000 1500 2000], ...
+                'MinorTicks', [], ...
+                'ValueChangedFcn', @(~,~) updateIntelYSLabel(app));
+            app.IntelRecYSLabel = uilabel(app.IntelTab, ...
+                'Text', '200', 'Position', [300 314 45 22], ...
+                'HorizontalAlignment', 'center');
 
             app.IntelRecButton = uibutton(app.IntelTab, ...
-                'Text', 'Recommend', 'Position', [240 338 80 22], ...
+                'Text', 'Recommend', 'Position', [360 338 80 22], ...
                 'ButtonPushedFcn', @(~,~) runRecommendation(app));
 
             app.IntelRecTable = uitable(app.IntelTab, ...
@@ -896,12 +874,41 @@ classdef MatSciApp < handle
                 'ButtonPushedFcn', @(~,~) runClustering(app));
 
             app.IntelSurrogateArea = uitextarea(app.IntelTab, ...
-                'Position', [670 80 290 410], 'Editable', 'off', ...
+                'Position', [670 180 290 310], 'Editable', 'off', ...
                 'FontName', 'Courier New');
+
+            % --- Cost Estimation section ---
+            uilabel(app.IntelTab, 'Text', 'COST ESTIMATION', ...
+                'Position', [670 150 180 22], 'FontWeight', 'bold');
+
+            uilabel(app.IntelTab, 'Text', 'Material:', ...
+                'Position', [670 122 55 22]);
+            app.IntelCostMaterialDrop = uidropdown(app.IntelTab, ...
+                'Items', matNames, 'Value', 'AISI 1045 Steel', ...
+                'Position', [730 122 130 22]);
+
+            uilabel(app.IntelTab, 'Text', 'Vol (m³):', ...
+                'Position', [670 90 50 22]);
+            app.IntelCostVolSlider = uislider(app.IntelTab, ...
+                'Position', [725 100 140 3], ...
+                'Limits', [0.0001 0.01], 'Value', 0.001, ...
+                'MajorTicks', [0.0001 0.005 0.01], ...
+                'MinorTicks', [], ...
+                'ValueChangedFcn', @(~,~) updateIntelCostVolLabel(app));
+            app.IntelCostVolLabel = uilabel(app.IntelTab, ...
+                'Text', '0.001', 'Position', [870 86 45 22], ...
+                'HorizontalAlignment', 'center');
+
+            app.IntelCostButton = uibutton(app.IntelTab, ...
+                'Text', 'Estimate Cost', 'Position', [870 122 90 22], ...
+                'ButtonPushedFcn', @(~,~) estimateCost(app));
+
+            app.IntelCostLabel = uilabel(app.IntelTab, ...
+                'Text', '', 'Position', [670 40 290 22]);
         end
 
         function runPrediction(app)
-            name = app.IntelMaterialField.Value;
+            name = app.IntelMaterialDrop.Value;
             try
                 pred = intelligence.predict_properties(name, 'K', 3);
                 txt = sprintf(['PROPERTY PREDICTION\n' ...
@@ -929,8 +936,8 @@ classdef MatSciApp < handle
         end
 
         function runRecommendation(app)
-            req.constraints.density = [0 app.IntelRecDensMax.Value];
-            req.constraints.yield_strength = [app.IntelRecYSMin.Value Inf];
+            req.constraints.density = [0 round(app.IntelRecDensSlider.Value)];
+            req.constraints.yield_strength = [round(app.IntelRecYSSlider.Value) Inf];
             req.objectives(1) = struct('property','yield_strength','goal','max','weight',0.5);
             req.objectives(2) = struct('property','density','goal','min','weight',0.3);
             req.objectives(3) = struct('property','cost','goal','min','weight',0.2);
@@ -1063,7 +1070,8 @@ classdef MatSciApp < handle
                     'hcp_ti', 'fcc_cu', 'fcc_ni', ...
                     'bcc_cr', 'diamond_si', 'wurtzite_zno', ...
                     'rocksalt_nacl', 'dual_phase'}, ...
-                'Position', [80 620 155 22]);
+                'Position', [80 620 155 22], ...
+                'ValueChangedFcn', @(~,~) generateXRD(app));
 
             uilabel(app.XrdTab, 'Text', 'Profile:', ...
                 'Position', [250 620 45 22]);
@@ -1074,30 +1082,39 @@ classdef MatSciApp < handle
 
             uilabel(app.XrdTab, 'Text', 'Sensitivity:', ...
                 'Position', [430 620 65 22]);
-            app.XrdSensitivitySpin = uieditfield(app.XrdTab, 'numeric', ...
-                'Position', [500 620 45 22], 'Value', 10, ...
-                'Limits', [1 50], 'RoundFractionalValues', 'on', ...
-                'Tooltip', 'Min peak height as % of max intensity');
+            app.XrdSensitivitySlider = uislider(app.XrdTab, ...
+                'Position', [500 630 100 3], ...
+                'Limits', [1 50], 'Value', 10, ...
+                'MajorTicks', [1 10 25 50], ...
+                'MinorTicks', [], ...
+                'Tooltip', 'Min peak height as % of max intensity', ...
+                'ValueChangedFcn', @(~,~) updateXrdSensitivityLabel(app));
+            app.XrdSensitivityLabel = uilabel(app.XrdTab, ...
+                'Text', '10%', 'Position', [605 616 30 22], ...
+                'HorizontalAlignment', 'center');
 
             app.XrdGenButton = uibutton(app.XrdTab, ...
-                'Text', 'Generate Pattern', 'Position', [560 620 120 22], ...
+                'Text', 'Generate Pattern', 'Position', [645 620 120 22], ...
                 'ButtonPushedFcn', @(~,~) generateXRD(app));
 
             app.XrdAnalyzeButton = uibutton(app.XrdTab, ...
-                'Text', 'Full Analysis', 'Position', [690 620 90 22], ...
+                'Text', 'Full Analysis', 'Position', [770 620 85 22], ...
                 'ButtonPushedFcn', @(~,~) analyzeXRD(app), ...
                 'Enable', 'off');
 
             app.XrdExportButton = uibutton(app.XrdTab, ...
-                'Text', 'Export CSV', 'Position', [790 620 80 22], ...
+                'Text', 'Export CSV', 'Position', [860 620 100 22], ...
                 'ButtonPushedFcn', @(~,~) exportXRD(app), ...
                 'Enable', 'off');
 
             app.XrdAxes = uiaxes(app.XrdTab, ...
-                'Position', [50 100 600 500]);
+                'Position', [50 330 600 270]);
+
+            app.XrdWHAxes = uiaxes(app.XrdTab, ...
+                'Position', [50 80 600 220]);
 
             app.XrdResultsArea = uitextarea(app.XrdTab, ...
-                'Position', [670 100 290 520], 'Editable', 'off', ...
+                'Position', [670 100 290 500], 'Editable', 'off', ...
                 'FontName', 'Courier New');
         end
 
@@ -1107,7 +1124,10 @@ classdef MatSciApp < handle
             [tt, int, meta] = xrd.generate_pattern('Material', mat);
             app.CurrentTwoTheta = tt;
             app.CurrentIntensity = int;
+            app.CurrentXrdFWHMs = [];
+            app.CurrentXrdCenters = [];
 
+            cla(app.XrdWHAxes, 'reset');
             cla(app.XrdAxes, 'reset');
             hold(app.XrdAxes, 'on');
             plot(app.XrdAxes, tt, int, 'b-', 'LineWidth', 1.2, 'HandleVisibility', 'off');
@@ -1154,7 +1174,7 @@ classdef MatSciApp < handle
             [~, corrected, bg] = xrd.subtract_background(tt, int);
 
             % Peak detection with user-tunable sensitivity
-            minHt = app.XrdSensitivitySpin.Value / 100;
+            minHt = round(app.XrdSensitivitySlider.Value) / 100;
             peaks = xrd.find_peaks(tt, corrected, ...
                 'MinHeight', minHt, 'MinProminence', minHt * 0.5, 'MinDistance', 1.5);
 
@@ -1271,6 +1291,33 @@ classdef MatSciApp < handle
 
             app.XrdResultsArea.Value = txt;
             app.XrdExportButton.Enable = 'on';
+
+            % Store fitted peak data and plot Williamson-Hall
+            app.CurrentXrdFWHMs = fwhms;
+            app.CurrentXrdCenters = centers;
+
+            fwhm_deg = fwhms(:);
+            two_theta_wh = centers(:);
+            wh = xrd.crystallite_size(fwhm_deg, two_theta_wh, 'Method', 'williamson_hall');
+
+            beta_rad = fwhm_deg * pi / 180;
+            theta_rad = (two_theta_wh / 2) * pi / 180;
+            x = 4 * sin(theta_rad);
+            y = beta_rad .* cos(theta_rad);
+            slope = wh.fit_coeffs(1);
+            intercept = wh.fit_coeffs(2);
+
+            cla(app.XrdWHAxes, 'reset');
+            hold(app.XrdWHAxes, 'on');
+            plot(app.XrdWHAxes, x, y, 'ko', 'MarkerSize', 7, 'MarkerFaceColor', [0 0.45 0.74]);
+            x_line = linspace(min(x)*0.9, max(x)*1.1, 50);
+            plot(app.XrdWHAxes, x_line, slope*x_line + intercept, 'r--', 'LineWidth', 1.5);
+            hold(app.XrdWHAxes, 'off');
+            xlabel(app.XrdWHAxes, '4 sin(\theta)');
+            ylabel(app.XrdWHAxes, '\beta cos(\theta) (rad)');
+            title(app.XrdWHAxes, sprintf('Williamson-Hall: D=%.1f nm, \\epsilon=%.2e, R^2=%.3f', ...
+                wh.crystallite_size_nm, wh.microstrain, wh.R2));
+            grid(app.XrdWHAxes, 'on');
         end
 
         function exportXRD(app)
@@ -1283,6 +1330,35 @@ classdef MatSciApp < handle
             writetable(T, filename);
             uialert(app.UIFigure, sprintf('Data exported to:\n%s', filename), ...
                 'Export Complete', 'Icon', 'success');
+        end
+
+        %% ---- SLIDER LABEL CALLBACKS ----
+        function updatePhaseTempLabel(app)
+            app.PhaseTempLabel.Text = sprintf('%d', round(app.PhaseTempSlider.Value));
+        end
+
+        function updatePhaseCompLabel(app)
+            app.PhaseCompLabel.Text = sprintf('%.0f', round(app.PhaseCompSlider.Value));
+        end
+
+        function updateMicroGrainsLabel(app)
+            app.MicroGrainsLabel.Text = sprintf('%d', round(app.MicroGrainsSlider.Value));
+        end
+
+        function updateXrdSensitivityLabel(app)
+            app.XrdSensitivityLabel.Text = sprintf('%d%%', round(app.XrdSensitivitySlider.Value));
+        end
+
+        function updateIntelDensLabel(app)
+            app.IntelRecDensLabel.Text = sprintf('%d', round(app.IntelRecDensSlider.Value));
+        end
+
+        function updateIntelYSLabel(app)
+            app.IntelRecYSLabel.Text = sprintf('%d', round(app.IntelRecYSSlider.Value));
+        end
+
+        function updateIntelCostVolLabel(app)
+            app.IntelCostVolLabel.Text = sprintf('%.4f', app.IntelCostVolSlider.Value);
         end
     end
 end

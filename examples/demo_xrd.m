@@ -21,7 +21,7 @@ title('XRD Pattern: FCC Aluminum'); grid on;
 
 %% 3. Background subtraction
 fprintf('\n=== Background Subtraction ===\n');
-[bg, corrected] = xrd.subtract_background(two_theta, intensity);
+[~, corrected, bg] = xrd.subtract_background(two_theta, intensity);
 fprintf('Background subtracted successfully\n');
 
 figure('Name', 'Background Correction', 'NumberTitle', 'off', 'Position', [100 100 900 400]);

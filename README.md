@@ -4,7 +4,7 @@
 
 [![MATLAB](https://img.shields.io/badge/MATLAB-R2020a%2B-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIgMjJMMTAgMiAxNiAxMiAyMiAyIiBzdHJva2U9IndoaXRlIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=)](https://www.mathworks.com/products/matlab.html)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-230%20passing-brightgreen)](#testing)
+[![Tests](https://img.shields.io/badge/tests-237%20passing-brightgreen)](#testing)
 [![File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](#installation)
 
 An open-source MATLAB toolkit providing **9 integrated modules** and a **unified GUI** for material science and engineering — from property lookup and Ashby-style selection to mechanical testing, phase diagrams, microstructure analysis, X-ray diffraction, and ML-based property prediction.
@@ -21,6 +21,7 @@ An open-source MATLAB toolkit providing **9 integrated modules** and a **unified
 - [Modules](#modules)
 - [GUI](#gui)
 - [Examples](#examples)
+- [Educational Labs](#educational-labs)
 - [Testing](#testing)
 - [Project Structure](#project-structure)
 - [Requirements](#requirements)
@@ -128,8 +129,8 @@ app = gui.MatSciApp();
 | **Material Selection** | `matsel` | `ashby`, `filter`, `index`, `rank`, `cost_estimate`, `convert_units`, `plot_styles` | Ashby charts, performance indices, multi-criteria ranking, cost estimation |
 | **Mechanical Testing** | `mechtest` | `analyze`, `plot`, `report`, `generate_sample`, `import_data`, `compare`, `constitutive_models`, `true_stress_strain`, `statistics`, `stats_report`, `generate_report` | Stress-strain analysis, constitutive fitting, statistical comparison |
 | **Phase Diagrams** | `phasediag` | `plot`, `lever`, `binary`, `systems` | Binary phase diagrams (Cu-Ni, Pb-Sn, Al-Si, Al-Cu, Fe-Ni) and lever rule |
-| **Microstructure** | `microstructure` | `grainsize`, `porosity`, `phase_fraction`, `generate_synthetic`, `batch_process`, `report`, `generate_report` | ASTM E112 grain size, porosity, phase fraction, batch processing |
-| **X-Ray Diffraction** | `xrd` | `generate_pattern`, `subtract_background`, `find_peaks`, `fit_peaks`, `crystallite_size`, `bragg` | 11 crystal structures, Gaussian/Lorentzian/pseudo-Voigt fitting, Scherrer equation |
+| **Microstructure** | `microstructure` | `grainsize`, `circular_intercept`, `porosity`, `phase_fraction`, `generate_synthetic`, `batch_process`, `report`, `generate_report` | ASTM E112 grain size, porosity, phase fraction, batch processing |
+| **X-Ray Diffraction** | `xrd` | `generate_pattern`, `subtract_background`, `find_peaks`, `fit_peaks`, `crystallite_size`, `williamson_hall_plot`, `bragg` | 11 crystal structures, Gaussian/Lorentzian/pseudo-Voigt fitting, Scherrer equation |
 | **Intelligence** | `intelligence` | `predict_properties`, `surrogate_model`, `recommend`, `classify_microstructure`, `anomaly_detection`, `feature_importance`, `cluster_materials` | KNN prediction, polynomial surrogates, k-means clustering, Mahalanobis anomaly detection |
 | **Standards** | `standards` | `astm_e8`, `astm_e112` | ASTM compliance validation |
 | **GUI** | `gui` | `MatSciApp` | Unified 7-tab graphical interface |
@@ -172,6 +173,9 @@ Ready-to-run demo scripts in the `examples/` folder:
 | `demo_microstructure.m` | microstructure | Grain size, porosity, dual-phase analysis |
 | `demo_xrd.m` | xrd | Pattern generation, background subtraction, peak fitting |
 | `demo_intelligence.m` | intelligence | KNN prediction, recommendations, surrogate models |
+| `lab_materials_101.m` | labs | Stress-strain curves, property extraction, constitutive models |
+| `lab_xrd_analysis.m` | labs | Bragg's law, peak fitting, Scherrer/Williamson-Hall |
+| `lab_microscopy.m` | labs | Grain size (linear & circular intercept), porosity, ASTM E112 |
 
 Run any demo:
 
@@ -183,9 +187,28 @@ Each demo uses `%%` section breaks — step through interactively with **Ctrl+En
 
 ---
 
+## Educational Labs
+
+Self-contained lab exercises for classroom use, with theory, working code, student TODO tasks, and instructor answer keys:
+
+| Lab | File | Topics |
+|-----|------|--------|
+| **Materials 101** | `labs/lab_materials_101.m` | Stress-strain curves, property extraction, material comparison, true stress, constitutive models, ASTM E8 |
+| **XRD Analysis** | `labs/lab_xrd_analysis.m` | Bragg's law, background subtraction, peak fitting, Scherrer/Williamson-Hall, crystal structure comparison |
+| **Microscopy** | `labs/lab_microscopy.m` | Grain size (linear & circular intercept), porosity, phase fraction, ASTM E112, batch processing |
+
+Run any lab:
+
+```matlab
+setup();
+run('labs/lab_materials_101.m');
+```
+
+---
+
 ## Testing
 
-The test suite contains **230 tests** across 16 test files:
+The test suite contains **237 tests** across 16 test files:
 
 ```matlab
 setup();
@@ -222,7 +245,8 @@ MatSciTools/
 │   ├── ROADMAP.md
 │   └── SPECIFICATION.md
 ├── examples/           % 8 demo scripts
-├── tests/              % 230 tests across 16 files
+├── labs/               % Educational lab exercises with answer keys
+├── tests/              % 237 tests across 16 files
 ├── build/              % Compiled outputs (gitignored)
 ├── matscitools.m       % Toolkit info entry point
 ├── setup.m             % Path initialization
@@ -283,7 +307,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 | Version | Highlights |
 |---------|------------|
-| **v1.0** | GitHub/File Exchange release, 230 tests, 9 modules, XRD demo, publication export |
+| **v1.0** | GitHub/File Exchange release, 237 tests, 9 modules, XRD demo, publication export, educational labs, Williamson-Hall plot, circular intercept |
 | v0.10 | Standalone compiler, anomaly detection, feature importance, clustering |
 | v0.9 | API documentation, GUI classify & XRD export |
 | v0.8 | Materials Project API, microstructure classification |
